@@ -24,6 +24,16 @@ namespace ay
 			return &m_data[0];
 		}
 
+		constexpr std::size_t getSize() const
+		{
+			return N;
+		}
+
+		constexpr char getKey() const
+		{
+			return KEY;
+		}
+
 	private:
 
 		char m_data[N]{};
@@ -95,19 +105,20 @@ namespace ay
 	};
 
 	// This function exists purely to extract the number of elements 'N' in the array 'data'
-	template <std::size_t N, char KEY>
+	template <std::size_t N, char KEY = '.'>
 	constexpr auto makeObfuscator(const char(&data)[N])
 	{
 		return obfuscator<N, KEY>(data);
 	}
 }
 
-// This helper macro will encrypt the string 'data' with an XOR cipher at compile-time based on 'key'
-// and return it in an ay::obfuscated_data object. This object is implicitly convertable to a
-// char* and when it is converted it will be automatically decrypted to the original string.
-// This macro is useful because it guarantees that ay::makeObfuscator is run at compile-time by
-// assigning it to a constexpr variable.
-#define AY_OBFUSCATE(data, key) \
+// Obfuscates the string 'data' at compile-time and returns an ay::obfuscated_data object that has
+// functions for decrypting the string and is also implicitly convertable to a char*
+#define AY_OBFUSCATE(data) AY_OBFUSCATE_KEY(data, '.')
+
+// Obfuscates the string 'data' with 'key' at compile-time and returns an ay::obfuscated_data object that has
+// functions for decrypting the string and is also implicitly convertable to a char*
+#define AY_OBFUSCATE_KEY(data, key) \
 	[](){ \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
 		static_assert(data[n - 1] == '\0', "String must be null terminated"); \
