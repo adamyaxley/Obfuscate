@@ -44,11 +44,11 @@ namespace ay
 	class obfuscated_data
 	{
 	public:
-		obfuscated_data(const char* data)
+		obfuscated_data(const obfuscator<N, KEY>& obfuscator)
 		{
 			for (int i = 0; i < N; i++)
 			{
-				m_data[i] = data[i];
+				m_data[i] = obfuscator.getData()[i];
 			}
 		}
 
@@ -123,5 +123,5 @@ namespace ay
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
 		static_assert(data[n - 1] == '\0', "String must be null terminated"); \
 		constexpr auto obfuscator = ay::makeObfuscator<n, key>(data); \
-		return ay::obfuscated_data<n, key>(obfuscator.getData()); \
+		return ay::obfuscated_data<n, key>(obfuscator); \
 	}()
