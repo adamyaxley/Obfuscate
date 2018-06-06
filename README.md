@@ -2,7 +2,7 @@
 Compile-time string literal obfuscation library for C++14.
 
 ## Whats the problem?
-When plain text string literals are used in C++ programs, they will be compiled as-is into the resultant binary. This causes them to be incredibly easy to find. One can simply open up the binary file in a text editor to see all of the embedded string literals in plain view. A specialy utility called [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) actually exists which can be used to search binary files for plain text strings.
+When plain text string literals are used in C++ programs, they will be compiled as-is into the resultant binary. This causes them to be incredibly easy to find. One can simply open up the binary file in a text editor to see all of the embedded string literals in plain view. A special utility called [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) actually exists which can be used to search binary files for plain text strings.
 
 ## What does this library do?
 This header-only library seeks to make it much much more difficult for embedded string literals in binary files to be found by encrypting them at compile-time, forcing the compiler to store the encrypted string literal instead of the plain text version. This will then be decrypted at runtime to be utilised within the program.
