@@ -3,6 +3,9 @@
 #include <cassert>
 #include <string>
 
+static const char* g_global_static1 = AY_OBFUSCATE("global_static1");
+static const char* g_global_static2 = AY_OBFUSCATE("global_static2");
+
 int main() 
 {
 	// Test AY_OBFUSCATE (main test)
@@ -53,6 +56,25 @@ int main()
 
 		// Test comparison
 		assert(std::string("Hello World") == (char*)test);
+	}
+
+	// Test global static const char* variables
+	{
+		assert(strcmp(g_global_static1, "global_static1") == 0);
+		puts(g_global_static1);
+		assert(strcmp(g_global_static2, "global_static2") == 0);
+		puts(g_global_static2);
+	}
+
+	// Test local const char* variables
+	{
+		const char* local1 = AY_OBFUSCATE("local1");
+		const char* local2 = AY_OBFUSCATE("local2");
+
+		assert(strcmp(local1, "local1") == 0);
+		puts(local1);
+		assert(strcmp(local2, "local2") == 0);
+		puts(local2);
 	}
 
 	return 0;
