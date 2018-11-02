@@ -46,7 +46,7 @@ int main()
 	
 	// Test direct API usage
 	{
-		constexpr auto obfuscator = ay::makeObfuscator("Hello World");
+		constexpr auto obfuscator = ay::make_obfuscator("Hello World");
 		auto test = ay::obfuscated_data<obfuscator.getSize(), obfuscator.getKey()>(obfuscator);
 
 		puts(test);

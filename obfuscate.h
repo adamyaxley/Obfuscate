@@ -126,7 +126,7 @@ namespace ay
 
 	// This function exists purely to extract the number of elements 'N' in the array 'data'
 	template <std::size_t N, char KEY = '.'>
-	constexpr auto makeObfuscator(const char(&data)[N])
+	constexpr auto make_obfuscator(const char(&data)[N])
 	{
 		return obfuscator<N, KEY>(data);
 	}
@@ -142,7 +142,7 @@ namespace ay
 	[](){ \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
 		static_assert(data[n - 1] == '\0', "String must be null terminated"); \
-		constexpr auto obfuscator = ay::makeObfuscator<n, key>(data); \
+		constexpr auto obfuscator = ay::make_obfuscator<n, key>(data); \
 		return ay::obfuscated_data<n, key>(obfuscator); \
 	}()
 	
