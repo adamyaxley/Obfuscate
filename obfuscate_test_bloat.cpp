@@ -43,7 +43,8 @@ int main()
 		}
 		else
 		{
-			std::cout << "Login failure: unrecognised username and password combination." << std::endl;
+			std::cout << "Login failure: unrecognised username and password"
+				"combination." << std::endl;
 		}
 	}
 

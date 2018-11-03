@@ -10,24 +10,29 @@ int main()
 {
 	// Test AY_OBFUSCATE (main test)
 	{
-		// Encrypt a string literal with an XOR cipher at compile time and store it in test.
+		// Encrypt a string literal with an XOR cipher at compile time and store
+		// it in test.
 		auto test = AY_OBFUSCATE("Hello World");
 
 		// The string starts out as encrypted
 		assert(test.is_encrypted());
 
-		// Manually decrypt the string. This is useful for pre-processing especially large strings.
+		// Manually decrypt the string. This is useful for pre-processing
+		// especially large strings.
 		test.decrypt();
 		assert(!test.is_encrypted());
 
-		// Output the plain text string to the console (implicitly converts to const char*)
+		// Output the plain text string to the console (implicitly converts to
+		// const char*)
 		puts(test);
 
-		// Re-encrypt the string so that it cannot be seen in it's plain text form in memory.
+		// Re-encrypt the string so that it cannot be seen in it's plain text
+		// form in memory.
 		test.encrypt();
 		assert(test.is_encrypted());
 
-		// The encrypted string will be automatically decrypted if necessary when implicitly converting to a const char*
+		// The encrypted string will be automatically decrypted if necessary
+		// when implicitly converting to a const char*
 		puts(test);
 
 		// The string is in a decrypted state
@@ -50,7 +55,8 @@ int main()
 	// Test direct API usage
 	{
 		constexpr auto obfuscator = ay::make_obfuscator("Hello World");
-		auto test = ay::obfuscated_data<obfuscator.getSize(), obfuscator.getKey()>(obfuscator);
+		auto test = ay::obfuscated_data<obfuscator.getSize(), 
+			obfuscator.getKey()>(obfuscator);
 
 		puts(test);
 
