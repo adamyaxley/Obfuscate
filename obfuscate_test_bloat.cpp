@@ -1,4 +1,17 @@
-#include <cstdio>
+/* ------------------------------- ABOUT ---------------------------------------
+
+Obfuscate naive login example (bloat test)
+This example login program demonstrates how much bloat is added to the final
+executable if AY_OBFUSCATE is used to obfuscate security sensitive strings at
+compile-time.
+
+Run calculate_bloat.py to output a table comparing release and debug configs.
+
+----------------------------------------------------------------------------- */
+
+#include <iostream>
+#include <string>
+
 #ifdef USE_AY_OBFUSCATE
 	#include "obfuscate.h"
 #else
@@ -7,10 +20,33 @@
 
 int main() 
 {
-	puts(AY_OBFUSCATE("Hello World. -Brian Kernighan"));
-	puts(AY_OBFUSCATE("Life is about making an impact, not making an income. -Kevin Kruse"));
-	puts(AY_OBFUSCATE("Whatever the mind of man can conceive and believe, it can achieve. -Napoleon Hill"));
-	puts(AY_OBFUSCATE("Two roads diverged in a wood, and I—I took the one ""less traveled by, And that has made all the difference. -Robert Frost"));
-	puts(AY_OBFUSCATE("Twenty years from now you will be more disappointed by the things that you didn’t do than by the ones you did do, so throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails.  Explore, Dream, Discover. -Mark Twain"));
+	const std::string username = AY_OBFUSCATE("root");
+	const std::string password = AY_OBFUSCATE("password");
+
+	std::cout << "Obfuscate naive login example (bloat test)" << std::endl;
+
+	std::string input_username;
+	std::string input_password;
+
+	while (true)
+	{
+		std::cout << "Username: ";
+		std::cin >> input_username;
+
+		std::cout << "Password: ";
+		std::cin >> input_password;
+
+		if (input_username == username && input_password == password)
+		{
+			std::cout << "Login success!" << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "Login failure: unrecognised username and password"
+				"combination." << std::endl;
+		}
+	}
+
 	return 0;
 }
