@@ -1,4 +1,4 @@
-:heavy_check_mark: [Source available on GitHub](https://github.com/adamyaxley/Obfuscate)
+**[Source available on GitHub](https://github.com/adamyaxley/Obfuscate)**
 
 # Obfuscate
 Guaranteed compile-time string literal obfuscation header-only library for C++14.
