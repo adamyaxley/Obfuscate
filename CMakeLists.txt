@@ -14,5 +14,5 @@ include_directories(include/${PROJECT_NAME})
 
 install(
 	DIRECTORY "include/${PROJECT_NAME}/"
-	DESTINATION "/usr"
+	DESTINATION "/usr/include"
 )
