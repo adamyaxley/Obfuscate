@@ -76,7 +76,7 @@ namespace ay
 	public:
 		obfuscated_data(const obfuscator<N, KEY>& obfuscator)
 		{
-			for (int i = 0; i < N; i++)
+			for (std::size_t i = 0; i < N; i++)
 			{
 				m_data[i] = obfuscator.getData()[i];
 			}
@@ -85,7 +85,7 @@ namespace ay
 		~obfuscated_data()
 		{
 			// Zero m_data to remove it from memory
-			for (int i = 0; i < N; i++)
+			for (std::size_t i = 0; i < N; i++)
 			{
 				m_data[i] = 0;
 			}
