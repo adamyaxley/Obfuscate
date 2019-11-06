@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cassert>
 #include <string>
+#include <cstring>
 
 static const char* g_global_static1 = AY_OBFUSCATE("global_static1");
 static const char* g_global_static2 = AY_OBFUSCATE("global_static2");
