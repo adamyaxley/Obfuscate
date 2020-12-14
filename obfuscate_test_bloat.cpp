@@ -20,8 +20,8 @@ Run calculate_bloat.py to output a table comparing release and debug configs.
 
 int main() 
 {
-	const std::string username = AY_OBFUSCATE("root");
-	const std::string password = AY_OBFUSCATE("password");
+	const std::string username(AY_OBFUSCATE("root"));
+	const std::string password(AY_OBFUSCATE("password"));
 
 	std::cout << "Obfuscate naive login example (bloat test)" << std::endl;
 
