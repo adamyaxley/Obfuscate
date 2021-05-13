@@ -44,7 +44,7 @@ int main()
 	
 	// Test AY_OBFUSCATE_KEY
 	{
-		auto test = AY_OBFUSCATE_KEY("Hello World", '@');
+		auto test = AY_OBFUSCATE_KEY("Hello World", 0xf8d3481a4bc32d83ull);
 
 		puts(test);
 
@@ -55,13 +55,23 @@ int main()
 	// Test direct API usage
 	{
 		constexpr auto obfuscator = ay::make_obfuscator("Hello World");
-		auto test = ay::obfuscated_data<obfuscator.getSize(), 
-			obfuscator.getKey()>(obfuscator);
+		auto test = ay::obfuscated_data<obfuscator.size(), obfuscator.key()>(obfuscator);
 
 		puts(test);
 
 		// Test comparison
 		assert(std::string("Hello World") == (char*)test);
+	}
+
+	// Test non-null terminated strings
+	{
+		constexpr auto obfuscator = ay::obfuscator<10, AY_OBFUSCATE_DEFAULT_KEY>("1234567890");
+		auto test = ay::obfuscated_data<obfuscator.size(), obfuscator.key()>(obfuscator);
+
+		puts(test);
+
+		// Test comparison
+		assert(std::string("1234567890") == (char*)test);
 	}
 
 	// Test global static const char* variables
