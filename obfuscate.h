@@ -160,7 +160,7 @@ namespace ay
 
 		// Local storage for the string. Call is_encrypted() to check whether or
 		// not the string is currently obfuscated.
-		char m_data[N]{};
+		char m_data[N];
 
 		// Whether data is currently encrypted
 		bool m_encrypted{ true };
