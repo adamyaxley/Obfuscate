@@ -12,6 +12,7 @@ env:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -19,9 +20,9 @@ jobs:
           - os: ubuntu-latest
             compiler: g++
           - os: ubuntu-latest
-            compiler: clang
+            compiler: clang++
           - os: macos-latest
-            compiler: clang 
+            compiler: clang++
           
     runs-on: ${{matrix.os}}
     
