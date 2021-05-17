@@ -7,6 +7,10 @@ option(GENERATE_TESTS "GENERATE_TESTS" ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Set unix platforms to output executables to Release and Debug folders (Windows does by default)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/Debug)
+
 # Unit tests
 if (GENERATE_TESTS)
     include(CTest)
