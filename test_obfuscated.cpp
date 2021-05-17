@@ -13,7 +13,7 @@ int main()
 		puts(str);
 	}
 	{
-		const char* str = AY_OBFUSCATE("const char* str");
+		const char* str = "const char* str"; // test fail case temporarily
 		puts(str);
 	}
 	{
