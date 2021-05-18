@@ -35,6 +35,21 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
       
-    - name: Test
+    - name: Unit Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
+      
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Test Obfuscated (auto)
+      run: python test_obfuscated.py ${{github.workspace}}/build/${{env.BUILD_TYPE}}/test_obfuscated.out "1 auto str"
+    - name: Test Obfuscated (char*)
+      run: python test_obfuscated.py ${{github.workspace}}/build/${{env.BUILD_TYPE}}/test_obfuscated.out "2 char* str"
+    - name: Test Obfuscated (const char*)
+      run: python test_obfuscated.py ${{github.workspace}}/build/${{env.BUILD_TYPE}}/test_obfuscated.out "3 const char* str"
+    - name: Test Obfuscated (static const char*)
+      run: python test_obfuscated.py ${{github.workspace}}/build/${{env.BUILD_TYPE}}/test_obfuscated.out "4 static const char* str"
+    - name: Test Obfuscated (Long String)
+      run: python test_obfuscated.py ${{github.workspace}}/build/${{env.BUILD_TYPE}}/test_obfuscated.out "5 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed ullamcorper lectus. Cras dapibus, turpis in dignissim consequat, justo massa vehicula sem, vestibulum condimentum dui risus vitae nunc. Mauris tincidunt condimentum nulla, non elementum lectus molestie id. Ut eget libero lorem. Proin vitae massa vehicula, hendrerit est a, tincidunt est. Sed aliquam velit quam, laoreet commodo massa aliquam et. Phasellus in nulla ac risus facilisis porttitor sit amet at enim. Vivamus ornare libero sit amet enim egestas semper vel non dolor.Ut vitae scelerisque elit, sed tincidunt tellus.Maecenas a accumsan justo, sit amet auctor nisl.Donec et quam mollis."
