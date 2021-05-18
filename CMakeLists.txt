@@ -25,16 +25,16 @@ if (GENERATE_TESTS)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
 
-    add_executable(obfuscate_test obfuscate.h obfuscate_test.cpp)
-    target_link_libraries(obfuscate_test gtest_main)
+    add_executable(test_unit obfuscate.h test_unit.cpp)
+    target_link_libraries(test_unit gtest_main)
 
-    add_test(NAME obfuscate_test COMMAND obfuscate_test)
+    add_test(NAME test_unit COMMAND test_unit)
 
     add_executable(test_obfuscated obfuscate.h test_obfuscated.cpp)
     set_target_properties(test_obfuscated PROPERTIES SUFFIX ".out")
 endif()
 
 # Bloat test
-add_executable(obfuscate_test_bloat_on obfuscate.h obfuscate_test_bloat.cpp)
-add_executable(obfuscate_test_bloat_off obfuscate.h obfuscate_test_bloat.cpp)
-target_compile_definitions(obfuscate_test_bloat_on PRIVATE USE_AY_OBFUSCATE=1)
+add_executable(test_bloat_on obfuscate.h test_bloat.cpp)
+add_executable(test_bloat_off obfuscate.h test_bloat.cpp)
+target_compile_definitions(test_bloat_on PRIVATE USE_AY_OBFUSCATE=1)

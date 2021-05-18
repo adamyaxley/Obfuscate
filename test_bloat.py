@@ -21,8 +21,8 @@ def main():
     print ("| Config | Plain string literals | Obfuscated strings | Bloat |")
     print ("|:------:|:---------------------:|:------------------:|:-----:|")
     for config in ["Release", "Debug"]:
-        sizeOn = os.stat(os.path.join(dir, config, "obfuscate_test_bloat_on.exe")).st_size
-        sizeOff = os.stat(os.path.join(dir, config, "obfuscate_test_bloat_off.exe")).st_size
+        sizeOn = os.stat(os.path.join(dir, config, "test_bloat_on.exe")).st_size
+        sizeOff = os.stat(os.path.join(dir, config, "test_bloat_off.exe")).st_size
         print ("| {} | {} | {} | {} ({:.1f}%) |".format(config, sizeOff, sizeOn, sizeOn - sizeOff, (sizeOn / sizeOff - 1.0) * 100))
 
 if __name__ == "__main__":
