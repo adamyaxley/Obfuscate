@@ -38,24 +38,23 @@ TEST(Obfuscate, AY_OBFUSCATE)
 	// Test comparison
 	ASSERT_TRUE(std::string("Hello World") == (char*)test);
 }
-	
+
 // Test AY_OBFUSCATE_KEY
 TEST(Obfuscate, AY_OBFUSCATE_KEY)
 {
-	auto test = AY_OBFUSCATE_KEY("Hello World", '@');
+	auto test = AY_OBFUSCATE_KEY("Hello World", 0xf8d3481a4bc32d83ull);
 
 	puts(test);
 
 	// Test comparison
 	ASSERT_TRUE(std::string("Hello World") == (char*)test);
 }
-	
+
 // Test direct API usage
 TEST(Obfuscate, API)
 {
 	constexpr auto obfuscator = ay::make_obfuscator("Hello World");
-	auto test = ay::obfuscated_data<obfuscator.getSize(), 
-		obfuscator.getKey()>(obfuscator);
+	auto test = ay::obfuscated_data<obfuscator.size(), obfuscator.key()>(obfuscator);
 
 	puts(test);
 
@@ -85,4 +84,16 @@ TEST(Obfuscate, LocalConstCharPtr)
 	puts(local1);
 	ASSERT_TRUE(strcmp(local2, "local2") == 0);
 	puts(local2);
+}
+
+// Test non-null terminated strings
+TEST(Obfuscate, NonNullTerminatedStr)
+{
+	constexpr auto obfuscator = ay::obfuscator<10, AY_OBFUSCATE_DEFAULT_KEY>("1234567890");
+	auto test = ay::obfuscated_data<obfuscator.size(), obfuscator.key()>(obfuscator);
+
+	puts(test);
+
+	// Test comparison
+	assert(std::string("1234567890") == (char*)test);
 }
