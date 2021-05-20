@@ -41,22 +41,10 @@ namespace ay
 
 	constexpr void cipher(char* data, size_type size, key_type key)
 	{
-		// Split the key into unaligned chunks
-		const char chunks[8] = {
-			char(key >> 41),
-			char(key >> 31),
-			char(key >> 7),
-			char(key >> 17),
-			char(key >> 47),
-			char(key),
-			char(key >> 55),
-			char(key >> 25)
-		};
-
-		// Obfuscate with an XOR cipher based on key
+		// Obfuscate with a simple XOR cipher based on key
 		for (size_type i = 0; i < size; i++)
 		{
-			data[i] ^= chunks[i % 8];
+			data[i] ^= char(key >> ((i % 8) * 8));
 		}
 	}
 
