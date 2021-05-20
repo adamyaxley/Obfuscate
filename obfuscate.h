@@ -175,6 +175,7 @@ namespace ay
 #define AY_OBFUSCATE_KEY(data, key) \
 	[]() -> ay::obfuscated_data<sizeof(data)/sizeof(data[0]), key>& { \
 		static_assert(sizeof(decltype(key)) == sizeof(ay::key_type), "key must be a 64 bit unsigned integer"); \
+		static_assert((key) >= (1ull << 56), "key must span all 8 bytes"); \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
 		constexpr auto obfuscator = ay::make_obfuscator<n, key>(data); \
 		static auto obfuscated_data = ay::obfuscated_data<n, key>(obfuscator); \
