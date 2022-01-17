@@ -39,7 +39,7 @@ namespace ay
 	using size_type = unsigned long long;
 	using key_type = unsigned long long;
 
-	// Generate a psuedo-random key that spans all 8 bytes
+	// Generate a pseudo-random key that spans all 8 bytes
 	constexpr key_type generate_key(key_type seed)
 	{
 		// Use the MurmurHash3 64-bit finalizer to hash our seed
