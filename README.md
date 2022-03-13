@@ -46,6 +46,9 @@ std::string var(AY_OBFUSCATE("string"));
 function_that_takes_char_pointer(AY_OBFUSCATE("string"));
 ```
 
+### Thread safety
+This library is *not* thread safe. If you intend to use this library in a multi-threaded context, you must put locks in appropriate places in your code to ensure that only one thread accesses this library at a time.
+
 ## Binary file size overhead
 This does come at a small cost. In a very naive login program, which obfuscates two strings (username and password) the following binary file bloat exists.
 
