@@ -27,11 +27,21 @@ std::cout << obfuscated_string << std::endl;
 
 ----------------------------------------------------------------------------- */
 
+// Workaround for __LINE__ not being constexpr when /ZI (Edit and Continue) is enabled in Visual Studio
+// See: https://developercommunity.visualstudio.com/t/-line-cannot-be-used-as-an-argument-for-constexpr/195665
+#ifdef _MSC_VER
+	#define AY_CAT(X,Y) AY_CAT2(X,Y)
+	#define AY_CAT2(X,Y) X##Y
+	#define AY_LINE int(AY_CAT(__LINE__,U))
+#else
+	#define AY_LINE __LINE__
+#endif
+
 #ifndef AY_OBFUSCATE_DEFAULT_KEY
 	// The default 64 bit key to obfuscate strings with.
 	// This can be user specified by defining AY_OBFUSCATE_DEFAULT_KEY before 
 	// including obfuscate.h
-	#define AY_OBFUSCATE_DEFAULT_KEY ay::generate_key(__LINE__)
+	#define AY_OBFUSCATE_DEFAULT_KEY ay::generate_key(AY_LINE)
 #endif
 
 namespace ay
