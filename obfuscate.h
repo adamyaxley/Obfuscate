@@ -206,7 +206,7 @@ namespace ay
 		static_assert((key) >= (1ull << 56), "key must span all 8 bytes"); \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
 		constexpr auto obfuscator = ay::make_obfuscator<n, key>(data); \
-		static auto obfuscated_data = ay::obfuscated_data<n, key>(obfuscator); \
+		thread_local auto obfuscated_data = ay::obfuscated_data<n, key>(obfuscator); \
 		return obfuscated_data; \
 	}()
 
