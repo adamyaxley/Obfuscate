@@ -27,6 +27,8 @@ std::cout << obfuscated_string << std::endl;
 
 ----------------------------------------------------------------------------- */
 
+#pragma once
+
 // Workaround for __LINE__ not being constexpr when /ZI (Edit and Continue) is enabled in Visual Studio
 // See: https://developercommunity.visualstudio.com/t/-line-cannot-be-used-as-an-argument-for-constexpr/195665
 #ifdef _MSC_VER
