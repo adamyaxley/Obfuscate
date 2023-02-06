@@ -5,7 +5,7 @@ This example login program demonstrates how much bloat is added to the final
 executable if AY_OBFUSCATE is used to obfuscate security sensitive strings at
 compile-time.
 
-Run calculate_bloat.py to output a table comparing release and debug configs.
+Run test_bloat.py to output a table comparing release and debug configs.
 
 ----------------------------------------------------------------------------- */
 
