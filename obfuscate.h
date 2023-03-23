@@ -74,7 +74,7 @@ namespace ay
 		// Obfuscate with a simple XOR cipher based on key
 		for (size_type i = 0; i < size; i++)
 		{
-			data[i] ^= char(key >> ((i % 8) * 8));
+			data[i] ^= char((key >> ((i % 8) * 8)) & 0xFF);
 		}
 	}
 
