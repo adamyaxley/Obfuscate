@@ -97,6 +97,7 @@ namespace ay
 			cipher(m_data, N, KEY);
 		}
 
+#ifdef __cpp_char8_t
 		// Obfuscates the string 'data' on construction
 		constexpr obfuscator(const char8_t* data)
 		{
@@ -110,6 +111,7 @@ namespace ay
 			// obfuscated with an XOR cipher based on key
 			cipher(m_data, N, KEY);
 		}
+#endif
 
 		constexpr const char* data() const
 		{
@@ -162,6 +164,7 @@ namespace ay
 			return m_data;
 		}
 
+#ifdef __cpp_char8_t
 		// Returns a pointer to the plain text string, decrypting it if
 		// necessary
 		operator char8_t*()
@@ -169,6 +172,7 @@ namespace ay
 			decrypt();
 			return reinterpret_cast<char8_t*>(m_data);
 		}
+#endif
 
 		// Manually decrypt the string
 		void decrypt()
@@ -214,6 +218,7 @@ namespace ay
 		return obfuscator<N, KEY>(data);
 	}
 
+#ifdef __cpp_char8_t
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
 	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY>
@@ -221,6 +226,8 @@ namespace ay
 	{
 		return obfuscator<N, KEY>(data);
 	}
+#endif
+
 }
 
 // Obfuscates the string 'data' at compile-time and returns a reference to a
