@@ -92,23 +92,23 @@ namespace ay
 	}
 
 	// Obfuscates or deobfuscates data with key
-	template <typename TChar>
-	constexpr void cipher(TChar* data, size_type size, key_type key)
+	template <typename CHAR_TYPE>
+	constexpr void cipher(CHAR_TYPE* data, size_type size, key_type key)
 	{
 		// Obfuscate with a simple XOR cipher based on key
 		for (size_type i = 0; i < size; i++)
 		{
-			data[i] ^= TChar((key >> ((i % 8) * 8)) & 0xFF);
+			data[i] ^= CHAR_TYPE((key >> ((i % 8) * 8)) & 0xFF);
 		}
 	}
 
 	// Obfuscates a string at compile time
-	template <size_type N, key_type KEY, typename TChar = char>
+	template <size_type N, key_type KEY, typename CHAR_TYPE = char>
 	class obfuscator
 	{
 	public:
 		// Obfuscates the string 'data' on construction
-		constexpr obfuscator(const TChar* data)
+		constexpr obfuscator(const CHAR_TYPE* data)
 		{
 			// Copy data
 			for (size_type i = 0; i < N; i++)
@@ -121,7 +121,7 @@ namespace ay
 			cipher(m_data, N, KEY);
 		}
 
-		constexpr const TChar* data() const
+		constexpr const CHAR_TYPE* data() const
 		{
 			return &m_data[0];
 		}
@@ -138,15 +138,15 @@ namespace ay
 
 	private:
 
-		TChar m_data[N]{};
+		CHAR_TYPE m_data[N]{};
 	};
 
 	// Handles decryption and re-encryption of an encrypted string at runtime
-	template <size_type N, key_type KEY, typename TChar = char>
+	template <size_type N, key_type KEY, typename CHAR_TYPE = char>
 	class obfuscated_data
 	{
 	public:
-		obfuscated_data(const obfuscator<N, KEY, TChar>& obfuscator)
+		obfuscated_data(const obfuscator<N, KEY, CHAR_TYPE>& obfuscator)
 		{
 			// Copy obfuscated data
 			for (size_type i = 0; i < N; i++)
@@ -166,7 +166,7 @@ namespace ay
 
 		// Returns a pointer to the plain text string, decrypting it if
 		// necessary
-		operator TChar* ()
+		operator CHAR_TYPE* ()
 		{
 			decrypt();
 			return m_data;
@@ -202,7 +202,7 @@ namespace ay
 
 		// Local storage for the string. Call is_encrypted() to check whether or
 		// not the string is currently obfuscated.
-		TChar m_data[N];
+		CHAR_TYPE m_data[N];
 
 		// Whether data is currently encrypted
 		bool m_encrypted{ true };
@@ -210,10 +210,10 @@ namespace ay
 
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
-	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename TChar = char>
-	constexpr auto make_obfuscator(const TChar(&data)[N])
+	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename CHAR_TYPE = char>
+	constexpr auto make_obfuscator(const CHAR_TYPE(&data)[N])
 	{
-		return obfuscator<N, KEY, TChar>(data);
+		return obfuscator<N, KEY, CHAR_TYPE>(data);
 	}
 }
 
