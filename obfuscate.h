@@ -103,7 +103,7 @@ namespace ay
 	}
 
 	// Obfuscates a string at compile time
-	template <typename TChar, size_type N, key_type KEY>
+	template <size_type N, key_type KEY, typename TChar = char>
 	class obfuscator
 	{
 	public:
@@ -142,11 +142,11 @@ namespace ay
 	};
 
 	// Handles decryption and re-encryption of an encrypted string at runtime
-	template <typename TChar, size_type N, key_type KEY>
+	template <size_type N, key_type KEY, typename TChar = char>
 	class obfuscated_data
 	{
 	public:
-		obfuscated_data(const obfuscator<TChar, N, KEY>& obfuscator)
+		obfuscated_data(const obfuscator<N, KEY, TChar>& obfuscator)
 		{
 			// Copy obfuscated data
 			for (size_type i = 0; i < N; i++)
@@ -210,10 +210,10 @@ namespace ay
 
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
-	template <typename TChar, size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY>
+	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename TChar = char>
 	constexpr auto make_obfuscator(const TChar(&data)[N])
 	{
-		return obfuscator<TChar, N, KEY>(data);
+		return obfuscator<N, KEY, TChar>(data);
 	}
 }
 
@@ -227,12 +227,13 @@ namespace ay
 // functions for decrypting the string and is also implicitly convertable to a
 // char*
 #define AY_OBFUSCATE_KEY(data, key) \
-	[]() -> ay::obfuscated_data<ay::char_type<decltype(*data)>, sizeof(data)/sizeof(data[0]), key>& { \
+	[]() -> ay::obfuscated_data<sizeof(data)/sizeof(data[0]), key, ay::char_type<decltype(*data)>>& { \
 		static_assert(sizeof(decltype(key)) == sizeof(ay::key_type), "key must be a 64 bit unsigned integer"); \
 		static_assert((key) >= (1ull << 56), "key must span all 8 bytes"); \
+		using char_type = ay::char_type<decltype(*data)>; \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
-		constexpr auto obfuscator = ay::make_obfuscator<ay::char_type<decltype(*data)>, n, key>(data); \
-		thread_local auto obfuscated_data = ay::obfuscated_data<ay::char_type<decltype(*data)>, n, key>(obfuscator); \
+		constexpr auto obfuscator = ay::make_obfuscator<n, key, char_type>(data); \
+		thread_local auto obfuscated_data = ay::obfuscated_data<n, key, char_type>(obfuscator); \
 		return obfuscated_data; \
 	}()
 
