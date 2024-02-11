@@ -17,7 +17,7 @@ following traits:
 	- Global lifetime
 	The actual instantiation of the ay::obfuscated_data takes place inside a
 	lambda as a function level static
-	- Implicitly convertable to a char*
+	- Implicitly convertible to a char*
 	This means that you can pass it directly into functions that would normally
 	take a char* or a const char*
 
@@ -51,28 +51,28 @@ namespace ay
 	using size_type = unsigned long long;
 	using key_type = unsigned long long;
 
-	template <typename _Ty>
+	template <typename T>
 	struct remove_const_ref {
-		using type = _Ty;
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<_Ty&> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<T&> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<const _Ty> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<const T> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<const _Ty&> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<const T&> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	using char_type = typename remove_const_ref<_Ty>::type;
+	template <typename T>
+	using char_type = typename remove_const_ref<T>::type;
 
 	// Generate a pseudo-random key that spans all 8 bytes
 	constexpr key_type generate_key(key_type seed)
@@ -92,23 +92,23 @@ namespace ay
 	}
 
 	// Obfuscates or deobfuscates data with key
-	template <typename TChar>
-	constexpr void cipher(TChar* data, size_type size, key_type key)
+	template <typename CHAR_TYPE>
+	constexpr void cipher(CHAR_TYPE* data, size_type size, key_type key)
 	{
 		// Obfuscate with a simple XOR cipher based on key
 		for (size_type i = 0; i < size; i++)
 		{
-			data[i] ^= TChar((key >> ((i % 8) * 8)) & 0xFF);
+			data[i] ^= CHAR_TYPE((key >> ((i % 8) * 8)) & 0xFF);
 		}
 	}
 
 	// Obfuscates a string at compile time
-	template <typename TChar, size_type N, key_type KEY>
+	template <size_type N, key_type KEY, typename CHAR_TYPE = char>
 	class obfuscator
 	{
 	public:
 		// Obfuscates the string 'data' on construction
-		constexpr obfuscator(const TChar* data)
+		constexpr obfuscator(const CHAR_TYPE* data)
 		{
 			// Copy data
 			for (size_type i = 0; i < N; i++)
@@ -121,7 +121,7 @@ namespace ay
 			cipher(m_data, N, KEY);
 		}
 
-		constexpr const TChar* data() const
+		constexpr const CHAR_TYPE* data() const
 		{
 			return &m_data[0];
 		}
@@ -138,15 +138,15 @@ namespace ay
 
 	private:
 
-		TChar m_data[N]{};
+		CHAR_TYPE m_data[N]{};
 	};
 
 	// Handles decryption and re-encryption of an encrypted string at runtime
-	template <typename TChar, size_type N, key_type KEY>
+	template <size_type N, key_type KEY, typename CHAR_TYPE = char>
 	class obfuscated_data
 	{
 	public:
-		obfuscated_data(const obfuscator<TChar, N, KEY>& obfuscator)
+		obfuscated_data(const obfuscator<N, KEY, CHAR_TYPE>& obfuscator)
 		{
 			// Copy obfuscated data
 			for (size_type i = 0; i < N; i++)
@@ -166,7 +166,7 @@ namespace ay
 
 		// Returns a pointer to the plain text string, decrypting it if
 		// necessary
-		operator TChar* ()
+		operator CHAR_TYPE* ()
 		{
 			decrypt();
 			return m_data;
@@ -202,7 +202,7 @@ namespace ay
 
 		// Local storage for the string. Call is_encrypted() to check whether or
 		// not the string is currently obfuscated.
-		TChar m_data[N];
+		CHAR_TYPE m_data[N];
 
 		// Whether data is currently encrypted
 		bool m_encrypted{ true };
@@ -210,10 +210,10 @@ namespace ay
 
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
-	template <typename TChar, size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY>
-	constexpr auto make_obfuscator(const TChar(&data)[N])
+	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename CHAR_TYPE = char>
+	constexpr auto make_obfuscator(const CHAR_TYPE(&data)[N])
 	{
-		return obfuscator<TChar, N, KEY>(data);
+		return obfuscator<N, KEY, CHAR_TYPE>(data);
 	}
 }
 
@@ -227,12 +227,13 @@ namespace ay
 // functions for decrypting the string and is also implicitly convertable to a
 // char*
 #define AY_OBFUSCATE_KEY(data, key) \
-	[]() -> ay::obfuscated_data<ay::char_type<decltype(*data)>, sizeof(data)/sizeof(data[0]), key>& { \
+	[]() -> ay::obfuscated_data<sizeof(data)/sizeof(data[0]), key, ay::char_type<decltype(*data)>>& { \
 		static_assert(sizeof(decltype(key)) == sizeof(ay::key_type), "key must be a 64 bit unsigned integer"); \
 		static_assert((key) >= (1ull << 56), "key must span all 8 bytes"); \
+		using char_type = ay::char_type<decltype(*data)>; \
 		constexpr auto n = sizeof(data)/sizeof(data[0]); \
-		constexpr auto obfuscator = ay::make_obfuscator<ay::char_type<decltype(*data)>, n, key>(data); \
-		thread_local auto obfuscated_data = ay::obfuscated_data<ay::char_type<decltype(*data)>, n, key>(obfuscator); \
+		constexpr auto obfuscator = ay::make_obfuscator<n, key, char_type>(data); \
+		thread_local auto obfuscated_data = ay::obfuscated_data<n, key, char_type>(obfuscator); \
 		return obfuscated_data; \
 	}()
 
