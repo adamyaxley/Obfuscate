@@ -17,7 +17,7 @@ following traits:
 	- Global lifetime
 	The actual instantiation of the ay::obfuscated_data takes place inside a
 	lambda as a function level static
-	- Implicitly convertable to a char*
+	- Implicitly convertible to a char*
 	This means that you can pass it directly into functions that would normally
 	take a char* or a const char*
 
