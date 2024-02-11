@@ -51,28 +51,28 @@ namespace ay
 	using size_type = unsigned long long;
 	using key_type = unsigned long long;
 
-	template <typename _Ty>
+	template <typename T>
 	struct remove_const_ref {
-		using type = _Ty;
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<_Ty&> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<T&> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<const _Ty> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<const T> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	struct remove_const_ref<const _Ty&> {
-		using type = _Ty;
+	template <typename T>
+	struct remove_const_ref<const T&> {
+		using type = T;
 	};
 
-	template <typename _Ty>
-	using char_type = typename remove_const_ref<_Ty>::type;
+	template <typename T>
+	using char_type = typename remove_const_ref<T>::type;
 
 	// Generate a pseudo-random key that spans all 8 bytes
 	constexpr key_type generate_key(key_type seed)
