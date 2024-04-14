@@ -237,6 +237,30 @@ namespace ay
 		return obfuscated_data; \
 	}()
 
+// Got this change from one of the branch for the root
+#if __cpp_nontype_template_args >= 201911
+
+template <unsigned long long N>
+struct ObfuscateString
+{
+	char data[N]{};
+	constexpr ObfuscateString(char const (&d)[N])
+	{
+		for (unsigned long long i = 0; i < N; i++)
+		{
+			data[i] = d[i];
+		}
+	};
+};
+
+template <ObfuscateString s>
+constexpr const char *operator""_o()
+{
+	return AY_OBFUSCATE(s.data);
+}
+
+#endif
+
 /* -------------------------------- LICENSE ------------------------------------
 
 Public Domain (http://www.unlicense.org)
