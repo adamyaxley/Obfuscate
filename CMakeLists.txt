@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(Obfuscate)
 
-option(GENERATE_TESTS "GENERATE_TESTS" ON)
+option(GENERATE_TESTS "GENERATE_TESTS" OFF)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set unix platforms to output executables to Release and Debug folders (Windows does by default)
