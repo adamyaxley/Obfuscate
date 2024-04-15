@@ -215,25 +215,6 @@ namespace ay
 	{
 		return obfuscator<N, KEY, CHAR_TYPE>(data);
 	}
-	
-	template <unsigned long long N>
-	struct ObfuscateString
-	{
-		char data[N]{};
-		constexpr ObfuscateString(char const (&d)[N])
-		{
-			for (unsigned long long i = 0; i < N; i++)
-			{
-				data[i] = d[i];
-			}
-		};
-	};
-
-	template <ObfuscateString s>
-	constexpr const char *operator""_o()
-	{
-		return AY_OBFUSCATE(s.data);
-	}
 }
 
 // Obfuscates the string 'data' at compile-time and returns a reference to a
