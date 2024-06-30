@@ -28,6 +28,9 @@ std::cout << obfuscated_string << std::endl;
 ----------------------------------------------------------------------------- */
 
 #pragma once
+#if __cplusplus >= 202002L
+	#include <type_traits>
+#endif
 
 // Workaround for __LINE__ not being constexpr when /ZI (Edit and Continue) is enabled in Visual Studio
 // See: https://developercommunity.visualstudio.com/t/-line-cannot-be-used-as-an-argument-for-constexpr/195665
@@ -51,6 +54,10 @@ namespace ay
 	using size_type = unsigned long long;
 	using key_type = unsigned long long;
 
+#if __cplusplus >= 202002L
+	template <typename T>
+	using char_type = std::remove_cvref_t<T>;
+#else
 	template <typename T>
 	struct remove_const_ref {
 		using type = T;
@@ -73,9 +80,14 @@ namespace ay
 
 	template <typename T>
 	using char_type = typename remove_const_ref<T>::type;
+#endif
 
 	// Generate a pseudo-random key that spans all 8 bytes
+	#if __cplusplus >= 202002L
+	consteval key_type generate_key(key_type seed)
+	#else
 	constexpr key_type generate_key(key_type seed)
+	#endif
 	{
 		// Use the MurmurHash3 64-bit finalizer to hash our seed
 		key_type key = seed;
@@ -108,7 +120,11 @@ namespace ay
 	{
 	public:
 		// Obfuscates the string 'data' on construction
+	        #if __cplusplus >= 202002L
+		consteval obfuscator(const CHAR_TYPE* data)
+		#else
 		constexpr obfuscator(const CHAR_TYPE* data)
+		#endif
 		{
 			// Copy data
 			for (size_type i = 0; i < N; i++)
@@ -126,12 +142,20 @@ namespace ay
 			return &m_data[0];
 		}
 
+	        #if __cplusplus >= 202002L
+		consteval size_type size() const
+		#else
 		constexpr size_type size() const
+		#endif
 		{
 			return N;
 		}
 
+	        #if __cplusplus >= 202002L
+		consteval key_type key() const
+		#else
 		constexpr key_type key() const
+		#endif
 		{
 			return KEY;
 		}
@@ -211,7 +235,11 @@ namespace ay
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
 	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename CHAR_TYPE = char>
+	#if __cplusplus >= 202002L
+	consteval auto make_obfuscator(const CHAR_TYPE(&data)[N])
+	#else
 	constexpr auto make_obfuscator(const CHAR_TYPE(&data)[N])
+	#endif
 	{
 		return obfuscator<N, KEY, CHAR_TYPE>(data);
 	}
