@@ -28,6 +28,11 @@ std::cout << obfuscated_string << std::endl;
 ----------------------------------------------------------------------------- */
 
 #pragma once
+#if __cplusplus >= 202002L
+	#define AY_CONSTEVAL consteval
+#else
+	#define AY_CONSTEVAL constexpr
+#endif
 
 // Workaround for __LINE__ not being constexpr when /ZI (Edit and Continue) is enabled in Visual Studio
 // See: https://developercommunity.visualstudio.com/t/-line-cannot-be-used-as-an-argument-for-constexpr/195665
@@ -51,6 +56,8 @@ namespace ay
 	using size_type = unsigned long long;
 	using key_type = unsigned long long;
 
+	// libstdc++ has std::remove_cvref_t<T> since C++20, but because not every user will be 
+	// able or willing to link to the STL, we prefer to do this functionality ourselves here.
 	template <typename T>
 	struct remove_const_ref {
 		using type = T;
@@ -75,7 +82,7 @@ namespace ay
 	using char_type = typename remove_const_ref<T>::type;
 
 	// Generate a pseudo-random key that spans all 8 bytes
-	constexpr key_type generate_key(key_type seed)
+	AY_CONSTEVAL key_type generate_key(key_type seed)
 	{
 		// Use the MurmurHash3 64-bit finalizer to hash our seed
 		key_type key = seed;
@@ -108,7 +115,7 @@ namespace ay
 	{
 	public:
 		// Obfuscates the string 'data' on construction
-		constexpr obfuscator(const CHAR_TYPE* data)
+		AY_CONSTEVAL obfuscator(const CHAR_TYPE* data)
 		{
 			// Copy data
 			for (size_type i = 0; i < N; i++)
@@ -126,12 +133,12 @@ namespace ay
 			return &m_data[0];
 		}
 
-		constexpr size_type size() const
+		AY_CONSTEVAL size_type size() const
 		{
 			return N;
 		}
 
-		constexpr key_type key() const
+		AY_CONSTEVAL key_type key() const
 		{
 			return KEY;
 		}
@@ -211,7 +218,7 @@ namespace ay
 	// This function exists purely to extract the number of elements 'N' in the
 	// array 'data'
 	template <size_type N, key_type KEY = AY_OBFUSCATE_DEFAULT_KEY, typename CHAR_TYPE = char>
-	constexpr auto make_obfuscator(const CHAR_TYPE(&data)[N])
+	AY_CONSTEVAL auto make_obfuscator(const CHAR_TYPE(&data)[N])
 	{
 		return obfuscator<N, KEY, CHAR_TYPE>(data);
 	}
