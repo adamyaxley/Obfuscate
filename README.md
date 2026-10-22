@@ -21,9 +21,9 @@ This header-only library seeks to make it difficult (but not impossible) for emb
 * _Guaranteed compile-time obfuscation_ - the string is compiled with a constexpr expression.
 * _Global lifetime (per-thread)_ - the obfuscated string is stored in a thread local variable in a unique lambda.
 * _Implicitly convertible to a char*_ - easy to integrate into existing codebases.
-* _Random 64-bit key_ - obfusated with a random key each time.
+* _Line-derived 64-bit key_ - the default key is deterministic and derived from the macro's invocation line; it is not a secret.
 
-By simply wrapping your string literal `"My String"` with `AY_OBFUSCATE("My String")` it will be encrypted at compile time with a random 64 bit key and stored in an `ay::obfuscated_data` object which you can manipulate at runtime. For convenience it is also implicitly convertable to a `char*`.
+By simply wrapping your string literal `"My String"` with `AY_OBFUSCATE("My String")` it will be encrypted at compile time with a deterministic 64-bit key derived from the invocation line using a hash finalizer, then stored in an `ay::obfuscated_data` object which you can manipulate at runtime. The key is not cryptographically random or secret; `AY_OBFUSCATE_KEY` allows an explicit key but does not make obfuscation suitable for protecting credentials or other sensitive values. For convenience, the object is also implicitly convertible to a `char*`.
 
 For example, the following program will not store the string "Hello World" in plain text anywhere in the compiled executable.
 ```c++
